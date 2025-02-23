@@ -1,5 +1,14 @@
-<h2> UNZIP THE "node_modules" BEFORE PROCEEDING </h2>
-
 This is my custom made Minecraft server panel for Termux, this project was uploaded for the people of TikTok to be able to download and use for
-their own personal uses, it is recommended that you do not edit the code and make it your own, however I cannot stop you. No assistance will be 
-provided for those who edited the code.
+their own personal uses, do not edit the code and make it your own, however I cannot stop you. No assistance will be provided for those who edited the code.
+
+JAVA MUST BE INSTALLED FOR THE SERVER TO RUN
+READ: The "start_minecraft.sh" file contains the code needed to start the server, please replace the code in it with your requirements (e.g the directory and the run command for java)
+
+The steps to running the panel are as follows:
+
+1. Unzip the node_modules folder in the root directory of the panel
+2. Make sure node is installed on the host machine
+3. Put the contents of the Minecraft server in the "minecraft" directory, the jar file should be in the root of the minecraft directory.
+4. Run the following command in the root of the panel's folder to start the web panel: node server.js
+5. Access the web panel via: http://yourphonesip:8080  (replace yourphonesip with the ip address of the device it's running on)
+6. Enjoy the panel, terminal output will be displayed on the page, and you can start/stop the server via the buttons provided.
