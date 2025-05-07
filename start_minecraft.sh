@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ~/minecraft-web-panel/minecraft
-java -Xmx3G -Xms1G -jar server.jar nogui
+cpulimit -l 100 -- java -Xmx2G -jar server.jar nogui
