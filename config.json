@@ -1,0 +1,14 @@
+{
+  "serverName": "My Minecraft Server",
+  "port": 8080,
+  "javaPath": "java",
+  "minMemory": "1024M",
+  "maxMemory": "2048M",
+  "jvmFlags": "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200",
+  "selectedJar": "server.jar",
+  "maxBackups": 10,
+  "autoStart": false,
+  "maxConsoleLines": 1000,
+  "passwordHash": "$2a$10$/QgGc5LvDkJrr0fdaK6Mhujj/xhSDxYXaTpr7baC3PF7OXp/4jfvy",
+  "jwtSecret": "1fb328e4-e447-421f-b405-b664a70d3570d38beda3-94f8-486a-804d-e42c0d41880e"
+}

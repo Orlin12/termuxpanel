@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TermuxPanel — Minecraft Server Manager</title>
+    <meta name="description" content="Modern Minecraft Server Management Panel for Termux">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏️</text></svg>">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen hidden">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="login-icon">⛏️</div>
+                <h1>TermuxPanel</h1>
+                <p class="login-subtitle">Minecraft Server Manager</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="login-btn">Sign In</button>
+                <div id="login-error" class="login-error hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Setup Screen -->
+    <div id="setup-screen" class="login-screen hidden">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="login-icon">⛏️</div>
+                <h1>Welcome to TermuxPanel</h1>
+                <p class="login-subtitle">Set up your admin password</p>
+            </div>
+            <form id="setup-form" class="login-form">
+                <div class="form-group">
+                    <label for="setup-password">Create Password</label>
+                    <input type="password" id="setup-password" placeholder="Choose a password" minlength="4" required>
+                </div>
+                <div class="form-group">
+                    <label for="setup-confirm">Confirm Password</label>
+                    <input type="password" id="setup-confirm" placeholder="Confirm your password" minlength="4" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                <div id="setup-error" class="login-error hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app-layout hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <span class="logo-icon">⛏️</span>
+                    <div class="logo-text">
+                        <span class="logo-title">TermuxPanel</span>
+                        <span class="logo-version">v2.0</span>
+                    </div>
+                </div>
+                <button class="sidebar-close" id="sidebar-close">✕</button>
+            </div>
+
+            <!-- Server Status Badge -->
+            <div class="sidebar-status">
+                <div class="status-indicator" id="sidebar-status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Offline</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#console" class="nav-item" data-page="console">
+                    <span class="nav-icon">💻</span>
+                    <span class="nav-label">Console</span>
+                </a>
+                <a href="#files" class="nav-item" data-page="files">
+                    <span class="nav-icon">📁</span>
+                    <span class="nav-label">File Manager</span>
+                </a>
+                <a href="#jars" class="nav-item" data-page="jars">
+                    <span class="nav-icon">☕</span>
+                    <span class="nav-label">JAR Manager</span>
+                </a>
+                <a href="#properties" class="nav-item" data-page="properties">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Server Config</span>
+                </a>
+                <a href="#backups" class="nav-item" data-page="backups">
+                    <span class="nav-icon">💾</span>
+                    <span class="nav-label">Backups</span>
+                </a>
+                <a href="#scheduler" class="nav-item" data-page="scheduler">
+                    <span class="nav-icon">⏰</span>
+                    <span class="nav-label">Scheduler</span>
+                </a>
+                <a href="#settings" class="nav-item" data-page="settings">
+                    <span class="nav-icon">🔧</span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-ghost btn-sm" id="logout-btn">
+                    <span>🚪</span> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Mobile Header -->
+        <header class="mobile-header" id="mobile-header">
+            <button class="hamburger" id="hamburger">☰</button>
+            <span class="mobile-title">TermuxPanel</span>
+            <div class="mobile-status" id="mobile-status-dot"></div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="main-content">
+            <!-- Pages rendered dynamically by app.js -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Modal Container -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <button class="modal-close" id="modal-close">✕</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer"></div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
