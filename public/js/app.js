@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// TermuxPanel v2.0 — Frontend Application
+// TermuxPanel v2.1.2 — Frontend Application
 // Single-Page Application with hash-based routing
 // ═══════════════════════════════════════════════════════════
 
@@ -923,6 +923,7 @@
                             <h1 class="page-title">Backups</h1>
                             <p class="page-subtitle">Manage server backups</p>
                         </div>
+                        <button class="btn btn-secondary" onclick="window.TP.uploadBackup()">⬆ Upload Backup</button>
                         <button class="btn btn-primary" onclick="window.TP.createBackup()">📦 Create Backup</button>
                     </div>
                     <div class="card">
@@ -1352,6 +1353,28 @@
 
         downloadBackup(name) {
             window.open(`/api/backups/download/${encodeURIComponent(name)}?token=${token}`, '_blank');
+        },
+
+        uploadBackup() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.tar.gz';
+            input.onchange = async () => {
+                if (!input.files[0]) return;
+                const file = input.files[0];
+                if (!file.name.endsWith('.tar.gz')) {
+                    return toast('Only .tar.gz files are allowed', 'warning');
+                }
+                const formData = new FormData();
+                formData.append('backup', file);
+                toast(`Uploading ${file.name}...`, 'info');
+                try {
+                    const result = await api('/api/backups/upload', { method: 'POST', body: formData });
+                    toast(`Uploaded ${result.name} (${formatBytes(result.size)})`, 'success');
+                    renderBackupsPage();
+                } catch (e) { /* handled */ }
+            };
+            input.click();
         },
 
         // Scheduler

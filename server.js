@@ -1,4 +1,4 @@
-// TermuxPanel v2.0 — Modern Minecraft Server Management Panel
+// TermuxPanel v2.1.2 — Modern Minecraft Server Management Panel
 // Designed for Termux on Android
 
 const express = require('express');
@@ -923,6 +923,23 @@ app.get('/api/backups/download/:name', (req, res) => {
     res.download(backupPath);
 });
 
+app.post('/api/backups/upload', upload.single('backup'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const originalName = req.file.originalname;
+    if (!originalName.endsWith('.tar.gz')) {
+        fs.unlinkSync(req.file.path);
+        return res.status(400).json({ error: 'Only .tar.gz files are allowed' });
+    }
+
+    const destPath = path.join(BACKUP_DIR, originalName);
+    fs.renameSync(req.file.path, destPath);
+
+    const stat = fs.statSync(destPath);
+    addConsoleLine(`[Panel] Uploaded backup: ${originalName} (${(stat.size / 1024 / 1024).toFixed(1)} MB)`, 'info');
+    res.json({ success: true, name: originalName, size: stat.size });
+});
+
 // ─── Task Scheduler ──────────────────────────────────────────────────────────
 const SCHEDULES_PATH = path.join(ROOT_DIR, 'schedules.json');
 let schedules = [];
@@ -1102,7 +1119,7 @@ app.get('*', (req, res) => {
 const PORT = config.port || 8080;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`\n  ╔════════════════════════════════════════╗`);
-    console.log(`  ║     TermuxPanel v2.0                   ║`);
+    console.log(`  ║     TermuxPanel v2.1.2                 ║`);
     console.log(`  ║     Minecraft Server Management        ║`);
     console.log(`  ╠════════════════════════════════════════╣`);
     console.log(`  ║  Panel:  http://localhost:${PORT}          ║`);
