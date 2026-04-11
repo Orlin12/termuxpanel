@@ -635,6 +635,7 @@
                 </div>
                 <div class="file-toolbar">
                     <div class="file-breadcrumb">${breadcrumbs.join('')}</div>
+                    <button class="btn btn-danger btn-sm" onclick="window.TP.deleteAll()">🗑 Delete All</button>
                     <button class="btn btn-secondary btn-sm" onclick="window.TP.createFolder()">📁 New Folder</button>
                     <button class="btn btn-primary btn-sm" onclick="window.TP.uploadFiles()">⬆ Upload</button>
                 </div>
@@ -1177,6 +1178,45 @@
                 } catch (e) { /* handled */ }
             };
             input.click();
+        },
+
+        deleteAll() {
+            showModal('⚠️ Delete All Server Files',
+                `<div style="text-align:center">
+                    <div style="font-size:3rem;margin-bottom:12px">⚠️</div>
+                    <p style="font-size:1.05rem;font-weight:600;color:var(--error);margin-bottom:12px">This will permanently delete ALL files inside your Minecraft server folder.</p>
+                    <p class="text-muted text-sm">Your world, plugins, configs, JAR files — <strong>everything</strong> will be wiped. This cannot be undone.</p>
+                    <p class="text-muted text-sm mt-4">Consider creating a <strong>backup</strong> first.</p>
+                    <div class="form-group mt-6">
+                        <label>Type <strong>DELETE</strong> to confirm</label>
+                        <input type="text" id="delete-all-confirm" placeholder="Type DELETE here" autocomplete="off">
+                    </div>
+                </div>`,
+                `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                 <button class="btn btn-danger" id="delete-all-btn" disabled onclick="window.TP.confirmDeleteAll()">🗑 Wipe Server</button>`
+            );
+            setTimeout(() => {
+                const input = document.getElementById('delete-all-confirm');
+                const btn = document.getElementById('delete-all-btn');
+                if (input && btn) {
+                    input.addEventListener('input', () => {
+                        btn.disabled = input.value.trim() !== 'DELETE';
+                    });
+                    input.focus();
+                }
+            }, 100);
+        },
+
+        async confirmDeleteAll() {
+            const input = document.getElementById('delete-all-confirm');
+            if (!input || input.value.trim() !== 'DELETE') return;
+            closeModal();
+            try {
+                const result = await api('/api/files/delete-all', { method: 'DELETE' });
+                toast(`Deleted ${result.deleted} items from server folder`, 'success');
+                currentFilePath = '.';
+                renderFilesPage();
+            } catch (e) { /* handled */ }
         },
 
         // JAR Manager

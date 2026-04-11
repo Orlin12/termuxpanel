@@ -720,6 +720,24 @@ app.delete('/api/files/delete', (req, res) => {
     }
 });
 
+app.delete('/api/files/delete-all', (req, res) => {
+    if (mcProcess) return res.status(400).json({ error: 'Stop the server before deleting all files.' });
+
+    try {
+        const items = fs.readdirSync(MC_DIR);
+        let deleted = 0;
+        for (const item of items) {
+            const itemPath = path.join(MC_DIR, item);
+            fs.rmSync(itemPath, { recursive: true, force: true });
+            deleted++;
+        }
+        addConsoleLine(`[Panel] Deleted all server files (${deleted} items)`, 'warn');
+        res.json({ success: true, deleted });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // ─── Server Properties ──────────────────────────────────────────────────────
 const PROPERTIES_PATH = path.join(MC_DIR, 'server.properties');
 
