@@ -884,22 +884,44 @@ app.post('/api/backups/restore/:name', async (req, res) => {
 
     if (mcProcess) return res.status(400).json({ error: 'Stop the server before restoring a backup' });
 
+    const tempDir = path.join(ROOT_DIR, '.restore_tmp_' + Date.now());
+
     try {
         addConsoleLine(`Restoring backup: ${req.params.name}...`, 'warn');
 
-        // Clear minecraft directory
-        const items = fs.readdirSync(MC_DIR);
-        for (const item of items) {
-            const itemPath = path.join(MC_DIR, item);
-            fs.rmSync(itemPath, { recursive: true, force: true });
+        // Extract to temp directory first to detect structure
+        fs.mkdirSync(tempDir, { recursive: true });
+        await tar.x({ file: backupPath, cwd: tempDir });
+
+        // Detect structure: check if extracted content has a 'minecraft' subdirectory
+        const extractedItems = fs.readdirSync(tempDir);
+        let sourceDir = tempDir;
+
+        if (extractedItems.length === 1 && fs.statSync(path.join(tempDir, extractedItems[0])).isDirectory()) {
+            // Single top-level directory (e.g. 'minecraft/' or any folder name) — use its contents
+            sourceDir = path.join(tempDir, extractedItems[0]);
         }
 
-        // Extract backup
-        await tar.x({ file: backupPath, cwd: ROOT_DIR });
+        // Clear minecraft directory
+        const mcItems = fs.readdirSync(MC_DIR);
+        for (const item of mcItems) {
+            fs.rmSync(path.join(MC_DIR, item), { recursive: true, force: true });
+        }
 
-        addConsoleLine(`Backup restored: ${req.params.name}`, 'info');
+        // Move extracted files into minecraft directory
+        const filesToCopy = fs.readdirSync(sourceDir);
+        for (const item of filesToCopy) {
+            fs.renameSync(path.join(sourceDir, item), path.join(MC_DIR, item));
+        }
+
+        // Cleanup temp dir
+        fs.rmSync(tempDir, { recursive: true, force: true });
+
+        addConsoleLine(`Backup restored: ${req.params.name} (${filesToCopy.length} items)`, 'info');
         res.json({ success: true });
     } catch (e) {
+        // Cleanup temp dir on failure
+        if (fs.existsSync(tempDir)) fs.rmSync(tempDir, { recursive: true, force: true });
         addConsoleLine(`Restore failed: ${e.message}`, 'error');
         res.status(500).json({ error: e.message });
     }
