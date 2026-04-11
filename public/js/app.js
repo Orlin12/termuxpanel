@@ -1311,7 +1311,7 @@
         },
 
         downloadBackup(name) {
-            window.open(`/api/backups/download/${encodeURIComponent(name)}`, '_blank');
+            window.open(`/api/backups/download/${encodeURIComponent(name)}?token=${token}`, '_blank');
         },
 
         // Scheduler

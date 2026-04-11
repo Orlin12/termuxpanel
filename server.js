@@ -72,7 +72,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(ROOT_DIR, 'public')));
 
 // Multer for file uploads
-const upload = multer({ dest: UPLOAD_DIR, limits: { fileSize: 500 * 1024 * 1024 } }); // 500MB max
+const upload = multer({ dest: UPLOAD_DIR, limits: { fileSize: 10 * 1024 * 1024 * 1024 } }); // 10GB max
 
 // ─── Minecraft Process Management ────────────────────────────────────────────
 let mcProcess = null;
@@ -225,7 +225,7 @@ function authMiddleware(req, res, next) {
     // If no password set, allow everything (first-time setup)
     if (!config.passwordHash) return next();
 
-    const token = req.headers.authorization?.replace('Bearer ', '');
+    const token = req.headers.authorization?.replace('Bearer ', '') || req.query.token;
     if (!token) return res.status(401).json({ error: 'No token provided' });
 
     try {
