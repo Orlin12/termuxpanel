@@ -1,4 +1,4 @@
-# TermuxPanel v2.0
+# TermuxPanel v2.2
 
 **Modern Minecraft Server Management Panel for Termux**
 

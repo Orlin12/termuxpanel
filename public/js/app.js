@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// TermuxPanel v2.1.2 — Frontend Application
+// TermuxPanel v2.2 — Frontend Application
 // Single-Page Application with hash-based routing
 // ═══════════════════════════════════════════════════════════
 
@@ -314,7 +314,7 @@
     document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
     overlay.addEventListener('click', closeSidebar);
 
-    document.querySelectorAll('.nav-item').forEach(item => {
+    document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const page = item.dataset.page;
@@ -332,8 +332,13 @@
         currentPage = page;
         location.hash = page;
 
-        // Update nav active state
+        // Update nav active state (Sidebar)
         document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.page === page);
+        });
+
+        // Update nav active state (Mobile Bottom Bar)
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
             item.classList.toggle('active', item.dataset.page === page);
         });
 
@@ -617,7 +622,7 @@
                         <span class="file-icon">${getFileIcon(item.name, item.isDirectory)}</span>
                         <span>${escapeHtml(item.name)}</span>
                     </div>
-                    <span class="file-size">${item.isDirectory ? '—' : formatBytes(item.size)}</span>
+                    <span class="file-size" data-label="Size:">${item.isDirectory ? '—' : formatBytes(item.size)}</span>
                     <span class="file-modified">${formatDate(item.modified)}</span>
                     <div class="file-actions-col">
                         ${!item.isDirectory ? `<button class="btn btn-ghost btn-xs" title="Download" onclick="event.stopPropagation(); window.TP.downloadFile('${escapeHtml(itemPath)}')">⬇</button>` : ''}

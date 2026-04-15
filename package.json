@@ -1,6 +1,6 @@
 {
   "name": "termuxpanel",
-  "version": "2.1.2",
+  "version": "2.2",
   "description": "Modern Minecraft Server Management Panel for Termux",
   "main": "server.js",
   "scripts": {

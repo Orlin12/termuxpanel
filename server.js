@@ -1,4 +1,4 @@
-// TermuxPanel v2.1.2 — Modern Minecraft Server Management Panel
+// TermuxPanel v2.2 — Modern Minecraft Server Management Panel
 // Designed for Termux on Android
 
 const express = require('express');
@@ -1141,7 +1141,7 @@ app.get('*', (req, res) => {
 const PORT = config.port || 8080;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`\n  ╔════════════════════════════════════════╗`);
-    console.log(`  ║     TermuxPanel v2.1.2                 ║`);
+    console.log(`  ║     TermuxPanel v2.2                   ║`);
     console.log(`  ║     Minecraft Server Management        ║`);
     console.log(`  ╠════════════════════════════════════════╣`);
     console.log(`  ║  Panel:  http://localhost:${PORT}          ║`);

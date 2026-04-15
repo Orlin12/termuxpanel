@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   TermuxPanel v2.1.2 — Design System
+   TermuxPanel v2.2 — Design System
    Modern dark theme with glassmorphism and emerald accents
    ═══════════════════════════════════════════════════════════ */
 
@@ -1588,12 +1588,18 @@ select {
 }
 
 @media (max-width: 768px) {
+    :root {
+        --header-height: 64px;
+        --bottom-nav-height: 72px;
+    }
+
     .sidebar {
         position: fixed;
         left: 0;
         top: 0;
         transform: translateX(-100%);
         box-shadow: var(--shadow-lg);
+        width: 280px;
     }
 
     .sidebar.open {
@@ -1610,87 +1616,221 @@ select {
 
     .mobile-header {
         display: flex;
+        height: var(--header-height);
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+    }
+
+    .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: var(--bottom-nav-height);
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border-top: 1px solid var(--glass-border);
+        z-index: 100;
+        padding-bottom: env(safe-area-inset-bottom);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .mobile-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: var(--text-secondary);
+        transition: all var(--transition-fast);
+        padding: 8px 0;
+    }
+
+    .mobile-nav-item.active {
+        color: var(--accent);
+    }
+
+    .mobile-nav-icon {
+        font-size: 1.4rem;
+    }
+
+    .mobile-nav-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
     }
 
     .main-content {
-        padding: 16px;
+        padding: 20px 16px;
+        padding-bottom: calc(var(--bottom-nav-height) + 20px + env(safe-area-inset-bottom));
     }
 
     .grid-2, .grid-3, .grid-4 {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
 
-    .file-list-header,
+    .stat-card {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    /* Modern Mobile File List */
+    .file-list-header {
+        display: none;
+    }
+
     .file-item {
-        grid-template-columns: 1fr 80px 60px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas: 
+            "name actions"
+            "meta actions";
+        padding: 12px;
+        gap: 2px 12px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: 8px;
     }
 
-    .file-modified { display: none; }
+    .file-name {
+        grid-area: name;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .file-size {
+        grid-area: meta;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+    }
+
+    .file-size::before {
+        content: attr(data-label) " ";
+    }
+
+    .file-modified {
+        display: block;
+        grid-area: meta;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-left: 12px;
+        padding-left: 12px;
+        border-left: 1px solid var(--border);
+    }
+
+    .file-actions-col {
+        grid-area: actions;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .file-actions-col .btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        background: var(--bg-elevated);
+        border-radius: 50%;
+    }
 
     .console-container {
-        height: calc(100vh - 180px);
+        height: calc(100vh - 200px - env(safe-area-inset-bottom));
     }
 
-    .page-title { font-size: 1.3rem; }
+    .console-output {
+        font-size: 0.8rem;
+        padding: 12px;
+    }
+
+    .console-input-row {
+        padding: 10px;
+    }
+
+    .page-title { 
+        font-size: 1.5rem; 
+        letter-spacing: -0.01em;
+    }
 
     .quick-actions {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
 
     .quick-action-btn {
         width: 100%;
         justify-content: center;
+        padding: 12px;
+        font-size: 0.9rem;
     }
 
     .backup-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
+        padding: 16px;
     }
 
     .backup-actions {
         width: 100%;
+        display: flex;
+        gap: 10px;
     }
 
     .backup-actions .btn {
         flex: 1;
     }
 
-    .schedule-item {
-        flex-wrap: wrap;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .download-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .toast-container {
-        left: 16px;
-        right: 16px;
-    }
-
-    .toast {
-        max-width: 100%;
-    }
-
     .modal {
-        max-width: 100%;
-        max-height: 90vh;
+        width: 95%;
+        margin: 0 auto;
+        align-self: flex-end;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        max-height: 85vh;
+        animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
     }
 }
 
 @media (max-width: 480px) {
     .login-container {
-        margin: 16px;
-        padding: 28px;
+        margin: 20px;
+        padding: 32px 24px;
+        border-radius: var(--radius-xl);
     }
 
     .download-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Hide mobile nav on desktop */
+@media (min-width: 769px) {
+    .mobile-nav {
+        display: none;
     }
 }
 
