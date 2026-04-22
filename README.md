@@ -1,8 +1,8 @@
-# TermuxPanel v2.2
+# TPanel v2.2
 
 **Modern Minecraft Server Management Panel for Termux**
 
-A sleek, feature-rich web panel for managing your Minecraft server directly from your Android device via Termux. Inspired by Pterodactyl Panel and Crafty Controller.
+A sleek, feature-rich web panel for managing your Minecraft server directly from your Android device via Termux, or from your Lightweight Linux devices that simply aren't capable of running fully fledged panels. Inspired by Pterodactyl Panel and Crafty Controller.
 
 ---
 
@@ -32,7 +32,7 @@ A sleek, feature-rich web panel for managing your Minecraft server directly from
 
 ```bash
 # Clone the repository
-git clone https://github.com/Orlin12/termuxpanel.git
+git clone https://github.com/Orlin12/tpanell.git
 cd termuxpanel
 
 # Install dependencies
@@ -63,7 +63,7 @@ http://<your-phone-ip>:8080
 ## 📂 Project Structure
 
 ```
-termuxpanel/
+tpanel/
 ├── server.js          # Backend (Express + Socket.IO)
 ├── package.json       # Dependencies
 ├── config.json        # Auto-generated panel config
